@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام المحاسبة وإدارة الحجوزات</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+    <div id="app" class="min-h-screen flex flex-col md:flex-row">
+        
+        <!-- Sidebar (للابتوب) / Topbar (للجوال) -->
+        <aside class="bg-slate-900 text-white w-full md:w-64 p-4 flex md:flex-col justify-between">
+            <div>
+                <h1 class="text-xl font-bold text-indigo-400 mb-6 flex items-center gap-2">
+                    <i class="fa-solid fa-calculator"></i> book-halls
+                </h1>
+                <nav class="space-y-2">
+                    <a href="#" class="block px-4 py-2 bg-slate-800 rounded-lg text-white font-medium">الرئيسية</a>
+                    <a href="#" class="block px-4 py-2 text-gray-400 hover:bg-slate-800 hover:text-white rounded-lg">المصروفات</a>
+                    <a href="#" class="block px-4 py-2 text-gray-400 hover:bg-slate-800 hover:text-white rounded-lg">التقارير</a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-4 md:p-8">
+            <header class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">لوحة التحكم</h2>
+                <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm font-semibold">أونلاين</span>
+            </header>
+
+            <!-- Dashboard Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <p class="text-gray-500 text-sm">إجمالي الإيرادات</p>
+                    <h3 class="text-2xl font-bold text-green-600 mt-2">{{ stats.income }} ريال</h3>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <p class="text-gray-500 text-sm">إجمالي المصروفات</p>
+                    <h3 class="text-2xl font-bold text-red-600 mt-2">{{ stats.expenses }} ريال</h3>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <p class="text-gray-500 text-sm">صافي الأرباح</p>
+                    <h3 class="text-2xl font-bold text-indigo-600 mt-2">{{ stats.net_profit }} ريال</h3>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const { createApp } = Vue
+        createApp({
+            data() {
+                return {
+                    stats: { income: 0, expenses: 0, net_profit: 0 }
+                }
+            },
+            mounted() {
+                fetch('/api/dashboard')
+                    .then(res => res.json())
+                    .then(data => this.stats = data)
+            }
+        }).mount('#app')
+    </script>
+</body>
+</html>

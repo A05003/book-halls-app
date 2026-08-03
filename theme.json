@@ -1,0 +1,21 @@
+{
+    "surface_color": "#ffffff",
+    "text_color": "#ffffff",
+    "secondary_color": "#110f43",
+    "primary_color": "#bfbb45",
+    "currency": "ر.س",
+    "font_family": "Cairo, sans-serif",
+    "background_color": "#5d6964",
+    "labels": {
+        "dashboard": "لوحة التحكم",
+        "customers": "العملاء",
+        "suppliers": "الموردون",
+        "products": "المنتجات",
+        "invoices": "الفواتير",
+        "payments": "السندات المالية",
+        "expenses": "المصروفات والإيرادات",
+        "reports": "التقارير والأرباح",
+        "reservations": "الحجوزات والتأجير",
+        "settings": "إعدادات النظام"
+    }
+}
