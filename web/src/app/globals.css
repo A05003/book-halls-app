@@ -1,0 +1,35 @@
+@import "tailwindcss";
+@import "@fontsource/cairo/arabic-400.css";
+@import "@fontsource/cairo/arabic-600.css";
+@import "@fontsource/cairo/arabic-700.css";
+@import "@fontsource/cairo/latin-400.css";
+@import "@fontsource/cairo/latin-700.css";
+
+@theme {
+  --font-sans: "Cairo", system-ui, sans-serif;
+  --color-navy: #110f43;
+  --color-gold: #bfbb45;
+  --color-bg: #f4f3ee;
+  --color-surface: #ffffff;
+  --color-ink: #17163a;
+  --color-muted: #6a6a7c;
+  --color-line: #e3e1d6;
+  --color-soft: #eceae0;
+  --color-good: #1c7c4d;
+  --color-bad: #b3261e;
+  --color-warn: #9a6a00;
+  --color-yel: #f4e44f;
+  --color-blue: #2b78c2;
+  --color-zawaya: #9a3b6b;
+}
+
+html { background: var(--color-bg); color: var(--color-ink); }
+body { font-family: var(--font-sans); font-variant-numeric: tabular-nums; }
+input, select, textarea { font: inherit; }
+:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+
+@media print {
+  .no-print { display: none !important; }
+  html, body { background: #fff !important; }
+  .print-sheet { box-shadow: none !important; border: 0 !important; margin: 0 !important; }
+}

@@ -1,0 +1,193 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  MANAGER // مدير القاعة: وصول كامل
+  ACCOUNTANT // محاسب: وصول كامل للشاشات واللوحة المالية
+  RECEPTION // موظف استقبال: العميل والحجز والمدفوعات
+  COORDINATOR // مشرفة التنسيق: كارت التنسيق ومصروفاته فقط
+}
+
+enum SectionType {
+  BOTH // قسمين
+  MEN_ONLY // رجال فقط
+  WOMEN_ONLY // نساء فقط
+}
+
+enum BookingStatus {
+  TENTATIVE // مبدئي
+  CONFIRMED // مؤكد
+  COMPLETED // منتهي
+  CANCELLED // ملغي
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  BANK_TRANSFER
+}
+
+enum ReceiptKind {
+  HALL // سند قصر ليالي الديار
+  COORDINATION // سند شركة زوايا المعالي
+}
+
+enum PaymentStatus {
+  ACTIVE
+  VOID
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  username     String   @unique
+  passwordHash String
+  role         Role
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  bookings  Booking[]
+  payments  Payment[]
+  auditLogs AuditLog[]
+}
+
+model Hall {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  bookings Booking[]
+}
+
+model Client {
+  id         Int      @id @default(autoincrement())
+  name       String
+  phone      String   @unique
+  nationalId String?
+  createdAt  DateTime @default(now())
+
+  bookings Booking[]
+}
+
+model Booking {
+  id             Int           @id @default(autoincrement())
+  contractNumber String        @unique
+  clientId       Int
+  hallId         Int
+  gregorianDate  DateTime      @db.Date
+  hijriDate      String
+  sectionType    SectionType
+  rentalAmount   Decimal       @db.Decimal(12, 2)
+  status         BookingStatus @default(TENTATIVE)
+  notes          String?
+  createdById    Int
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  client       Client         @relation(fields: [clientId], references: [id])
+  hall         Hall           @relation(fields: [hallId], references: [id])
+  createdBy    User           @relation(fields: [createdById], references: [id])
+  baseExpenses BaseExpense[]
+  extras       ExtraService[]
+  coordination Coordination?
+  payments     Payment[]
+
+  @@index([hallId, gregorianDate])
+  @@index([gregorianDate])
+  @@index([clientId])
+  @@index([status])
+}
+
+// مصاريف عقد الإيجار (الخدمات الأساسية المرتبطة بالعقد)
+model BaseExpense {
+  id        Int     @id @default(autoincrement())
+  bookingId Int
+  name      String
+  amount    Decimal @db.Decimal(12, 2)
+  sortOrder Int     @default(0)
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+}
+
+// الزيادات: ما يُضاف فوق المتفق عليه بالعقد. الصافي = المبلغ - الصرف (يُحسب ولا يُخزَّن)
+model ExtraService {
+  id            Int     @id @default(autoincrement())
+  bookingId     Int
+  serviceName   String
+  chargedAmount Decimal @db.Decimal(12, 2)
+  costAmount    Decimal @default(0) @db.Decimal(12, 2)
+  sortOrder     Int     @default(0)
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+}
+
+model Coordination {
+  id                     Int     @id @default(autoincrement())
+  bookingId              Int     @unique
+  coordinationContractNo String  @unique
+  amount                 Decimal @db.Decimal(12, 2)
+
+  booking  Booking               @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  expenses CoordinationExpense[]
+}
+
+model CoordinationExpense {
+  id             Int     @id @default(autoincrement())
+  coordinationId Int
+  name           String
+  amount         Decimal @db.Decimal(12, 2)
+  sortOrder      Int     @default(0)
+
+  coordination Coordination @relation(fields: [coordinationId], references: [id], onDelete: Cascade)
+
+  @@index([coordinationId])
+}
+
+// السند لا يُحذف، يُلغى (VOID) ويبقى أثره في السجل
+model Payment {
+  id            Int           @id @default(autoincrement())
+  bookingId     Int
+  method        PaymentMethod
+  amount        Decimal       @db.Decimal(12, 2)
+  receiptNumber String        @unique
+  receiptKind   ReceiptKind
+  paymentDate   DateTime      @db.Date
+  status        PaymentStatus @default(ACTIVE)
+  voidedAt      DateTime?
+  createdById   Int
+  createdAt     DateTime      @default(now())
+
+  booking   Booking @relation(fields: [bookingId], references: [id])
+  createdBy User    @relation(fields: [createdById], references: [id])
+
+  @@index([bookingId])
+  @@index([paymentDate])
+}
+
+model Sequence {
+  key   String @id
+  value Int    @default(0)
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  action    String
+  entity    String
+  entityId  Int?
+  detail    Json?
+  createdAt DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([entity, entityId])
+  @@index([createdAt])
+}
