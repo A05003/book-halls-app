@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Tajawal:wght@400;500&display=swap">
 <style>
 /* Layout: right-hand navy rail + fluid workspace; gold marks the active entity; navy/gold from theme.json */
-:root{--bg:#f4f3ee;--surface:#fff;--ink:#17163a;--muted:#6a6a7c;--line:#e3e1d6;--navy:#110f43;--gold:#bfbb45;--gold-ink:#6b6820;--layali:#110f43;--zawaya:#9a3b6b;--good:#1c7c4d;--bad:#b3261e;--warn:#9a6a00;--soft:#eceae0;--btn:#110f43;--btnfg:#fff;--f-d:'Cairo',system-ui,sans-serif;--f-b:'Tajawal','Cairo',system-ui,sans-serif}
+:root{--bg:#f4f3ee;--surface:#fff;--ink:#17163a;--muted:#6a6a7c;--line:#e3e1d6;--navy:#110f43;--gold:#bfbb45;--gold-ink:#6b6820;--layali:#110f43;--zawaya:#9a3b6b;--good:#1c7c4d;--bad:#b3261e;--warn:#9a6a00;--soft:#eceae0;--btn:#110f43;--btnfg:#fff;--yel:#f4e44f;--blue:#2b78c2;--f-d:'Cairo',system-ui,sans-serif;--f-b:'Tajawal','Cairo',system-ui,sans-serif}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0c26;--surface:#17163a;--ink:#eeedf7;--muted:#a3a2bd;--line:#2c2b55;--navy:#07061a;--gold-ink:#d7d36a;--layali:#bfbb45;--zawaya:#e58bb8;--good:#58c98c;--bad:#ff8a80;--warn:#e8b64a;--soft:#211f4a;--btn:#bfbb45;--btnfg:#110f43;color-scheme:dark}}
 :root[data-theme="dark"]{--bg:#0d0c26;--surface:#17163a;--ink:#eeedf7;--muted:#a3a2bd;--line:#2c2b55;--navy:#07061a;--gold-ink:#d7d36a;--layali:#bfbb45;--zawaya:#e58bb8;--good:#58c98c;--bad:#ff8a80;--warn:#e8b64a;--soft:#211f4a;--btn:#bfbb45;--btnfg:#110f43;color-scheme:dark}
 *{box-sizing:border-box}
@@ -62,6 +62,17 @@ input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]) .chip.l{background:#bfbb45;color:#110f43}}:root[data-theme=dark] .chip.l{background:#bfbb45;color:#110f43}
 .al{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line);flex-wrap:wrap}
 .ok2{color:var(--good)}@media(max-width:560px){.cal .d{min-height:58px;padding:3px}.chip{font-size:10px}}
+.tabs{display:flex;gap:4px;overflow-x:auto;padding-bottom:6px;margin-bottom:12px}.tabs button{all:unset;cursor:pointer;min-width:38px;text-align:center;padding:6px 10px;border-radius:7px 7px 0 0;background:var(--soft);font:700 13px var(--f-d);color:var(--muted);white-space:nowrap}
+.tabs button[aria-pressed=true]{background:var(--surface);color:var(--ink);box-shadow:0 -2px 0 var(--gold) inset,0 0 0 1px var(--line)}.tabs button.fin{color:#fff;background:var(--bad)}.tabs button.nw{background:var(--btn);color:var(--btnfg)}
+.xh{background:var(--soft);border:1px solid var(--line);border-radius:10px 10px 0 0;padding:10px 14px;display:flex;flex-wrap:wrap;gap:6px 22px;font-family:var(--f-d);font-weight:600}.xh b{font-weight:800}
+.evg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0}@media(max-width:1180px){.evg{grid-template-columns:1fr}}
+.xp{background:var(--surface);border:1px solid var(--line);border-radius:10px;min-width:0;overflow:hidden}.xp>h3{margin:0;padding:8px 12px;background:var(--soft);font-size:14px;text-align:center}
+.xp table{font-size:13.5px}.xp td,.xp th{border:1px solid var(--line);padding:5px 8px}.xp th{background:var(--soft)}
+.yl td,td.yl{background:var(--yel);color:#17163a;font-weight:700}.bl td,td.bl{background:var(--blue);color:#fff;font-weight:700}
+.mf{display:flex;gap:6px;flex-wrap:wrap;padding:8px}.mf input,.mf select{flex:1 1 90px;padding:5px 8px;font-size:13px}.mf .btn{padding:5px 12px;font-size:13px}
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:14px}
+.sum div{border:1px solid var(--line);margin:-1px 0 0 -1px;min-width:0}.sum small{display:block;background:var(--blue);color:#fff;padding:4px 10px;font:600 12.5px var(--f-d)}.sum b{display:block;padding:7px 10px;font:800 17px var(--f-d);font-variant-numeric:tabular-nums;background:var(--surface)}.sum .hl b{background:var(--yel);color:#17163a}
+textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px;width:100%;min-height:60px}
 </style>
 <div class="app">
 <nav class="rail" id="rail" aria-label="القائمة الرئيسية"></nav>
@@ -76,16 +87,15 @@ const ACC={1010:'الصندوق',1020:'الشبكة / البنك',1100:'ذمم �
 const PAY={cash:'نقد',card:'شبكة',bank:'تحويل بنكي'};
 const STAT={req:['حجز مبدئي','wr'],conf:['مؤكد','ok'],done:['مكتمل',''],cancel:['ملغي','bd']};
 const ROLES={mgr:{n:'نورة الشهري',t:'مدير القاعة',deny:[],hide:[]},acc:{n:'ياسر الحربي',t:'محاسب',deny:['cancel','lock'],hide:[]},rec:{n:'هند السبيعي',t:'موظفة استقبال',deny:['cancel','lock','exp'],hide:['ledger','audit','reports','daily']}};
-let role='mgr',view='dash',flt='ALL',cm=0;
+let role='mgr',view='dash',flt='ALL',cm=0,cur=1;
 const can=a=>!ROLES[role].deny.includes(a),USER=()=>ROLES[role].n+' ('+ROLES[role].t+')';
-const nf=new Intl.NumberFormat('ar-SA-u-nu-latn'),money=n=>nf.format(Math.round(n))+' ر.س';
+const nf=new Intl.NumberFormat('ar-SA-u-nu-latn'),money=n=>nf.format(Math.round(n))+' ر.س',num=n=>nf.format(Math.round(n));
 const shift=(d,n)=>{const x=new Date(d+'T12:00:00');x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
 const today=()=>new Date().toISOString().slice(0,10),addDays=n=>shift(today(),n);
 const hij=d=>{try{return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn',{day:'numeric',month:'long',year:'numeric'}).format(new Date(d+'T12:00:00'))}catch(e){return ''}};
 const greg=d=>new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-latn',{day:'numeric',month:'long',year:'numeric'}).format(new Date(d+'T12:00:00'));
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let S;const KEY='layali-trial-v2';
-/* ---- الدفتر: قيد مزدوج + سلسلة تجزئة (مستوحى من Odoo inalterable_hash و ERPNext GL Entry) ---- */
+let S;const KEY='layali-trial-v3';
 function fnv(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return h.toString(16).padStart(8,'0')}
 const hp=j=>fnv(j.prev+'|'+j.date+'|'+j.ref+'|'+JSON.stringify(j.lines));
 function post(ref,desc,lines,e){const dr=lines.reduce((x,l)=>x+l[1],0),cr=lines.reduce((x,l)=>x+l[2],0);if(dr!==cr)throw new Error('قيد غير متوازن');
@@ -97,68 +107,86 @@ function cust(name,phone,idn){let c=S.cust.find(x=>x.phone===phone);if(!c){c={id
 const paidOf=b=>S.rec.filter(r=>r.bid===b.id&&r.st==='ok').reduce((x,r)=>x+r.amt,0);
 const outOf=b=>b.st==='cancel'?0:b.total-paidOf(b);
 const cn=id=>S.cust.find(c=>c.id===id)?.name||'';
+const sum=(a,f)=>a.reduce((s,x)=>s+f(x),0);
 function sched(total,date){const a=Math.round(total*.3),m=Math.round(total*.4);return [{l:'العربون',due:today(),amt:a},{l:'الدفعة الثانية',due:shift(date,-14),amt:m},{l:'الدفعة الأخيرة',due:shift(date,-3),amt:total-a-m}]}
 function dues(b){if(b.st==='cancel'||b.st==='done')return[];const p=paidOf(b);let cum=0,r=[];for(const i of b.inst){cum+=i.amt;if(p<cum)r.push({b,l:i.l,due:i.due,rem:Math.min(i.amt,cum-p),late:i.due<today()})}return r}
-function mkBook(e,name,phone,idn,date,kind,a,paid,pm){
- const c=cust(name,phone,idn),items=e==='Z'?a:[],total=e==='Z'?items.reduce((x,i)=>x+i[1],0):a;
- const b={id:S.book.length+1,e,no:(e==='L'?'ع-':'ف-')+String(S.seq[e]++).padStart(4,'0'),cid:c.id,date,kind,total,items,created:today(),st:'req',inst:sched(total,date)};S.book.push(b);
- post(b.no,(e==='L'?'عقد قاعة ':'فاتورة تنسيق ')+b.no,[['1100',total,0,],[ENT[e].cr,0,total]],e);
- log('إصدار '+(e==='L'?'عقد':'فاتورة')+' '+b.no+' — '+ENT[e].n);
- if(paid>0){mkRec(b.id,paid,pm);if(paid>=b.inst[0].amt)b.st='conf'}return b}
+/* ---- الحفل: وحدة تجمع عقد القاعة وعقد التنسيق ومصاريفهما (مثل ورقة «بيانات الحفل») ---- */
+function mkBook(e,ev,base,items){const total=e==='Z'?sum(items,i=>i[1]):base;
+ const b={id:S.book.length+1,e,ev:ev.id,no:(e==='L'?'ع-':'ف-')+String(S.seq[e]++).padStart(4,'0'),cid:ev.cid,date:ev.date,kind:ev.kind,base:total,total,items,created:today(),st:'req',inst:sched(total,ev.date)};S.book.push(b);
+ post(b.no,(e==='L'?'عقد قاعة ':'فاتورة تنسيق ')+b.no,[['1100',total,0],[ENT[e].cr,0,total]],e);log('إصدار '+(e==='L'?'عقد':'فاتورة')+' '+b.no+' — '+ENT[e].n);return b}
 function mkRec(bid,amt,pm){const b=S.book.find(x=>x.id===bid);
  const r={id:S.rec.length+1,no:'س-'+String(S.seq.R++).padStart(4,'0'),bid,e:b.e,amt,pm,date:today(),st:'ok'};S.rec.push(r);
- post(r.no,'سند قبض '+r.no,[[pm==='cash'?'1010':'1020',amt,0],['1100',0,amt]],b.e);log('سند قبض '+r.no+' بمبلغ '+money(amt)+' — '+ENT[b.e].n);return r}
-function addExp(t,amt,acc,pm,e){S.exp.push({id:S.exp.length+1,t,amt,acc,pm,date:today(),e:e||''});post('م-'+S.exp.length,t,[[acc,amt,0],[pm==='cash'?'1010':'1020',0,amt]],e);log('تسجيل مصروف: '+t+' — '+money(amt))}
-function seed(){S={cust:[],book:[],rec:[],exp:[],jr:[],log:[],seq:{L:1,Z:1,R:1},lock:''};
- mkBook('L','محمد العتيبي','0551234567','1090011223',addDays(6),'حفل زواج',18000,5400,'bank');
- mkBook('Z','سارة القحطاني','0509876543','1080099887',addDays(6),'تنسيق زواج',[['كوشة ملكية',6500],['طاولات وتزيين',3200],['ضيافة وحلويات',4300]],4200,'card');
- mkBook('L','فهد الدوسري','0533344556','1070055443',addDays(20),'حفل خطوبة',12000,3600,'cash');
- mkBook('L','عمر الشمري','0544455667','1055566778',addDays(45),'حفل زواج',20000,0,'cash');
- addExp('كهرباء وماء — الشهر الحالي',1850,'5200','cash','');addExp('ضيافة وقهوة للقاعة',920,'5300','cash','L');addExp('مستلزمات كوشة',1400,'5300','bank','Z')}
+ post(r.no,'سند قبض '+r.no,[[pm==='cash'?'1010':'1020',amt,0],['1100',0,amt]],b.e);log('سند قبض '+r.no+' بمبلغ '+money(amt)+' — '+ENT[b.e].n);
+ if(b.st==='req'&&paidOf(b)>=b.inst[0].amt)b.st='conf';return r}
+function addExp(t,amt,acc,pm,e,ev,sec){S.exp.push({id:S.exp.length+1,t,amt,acc,pm,date:today(),e:e||'',ev:ev||0,sec:sec||''});post('م-'+S.exp.length,t,[[acc,amt,0],[pm==='cash'?'1010':'1020',0,amt]],e);log('تسجيل مصروف: '+t+' — '+money(amt))}
+function mkEvent(o){const c=cust(o.name,o.phone,o.idn),ev={id:S.ev.length+1,cid:c.id,date:o.date,kind:o.kind,pct:0,note:''};ev.no='ح-'+String(ev.id).padStart(3,'0');S.ev.push(ev);
+ const L=mkBook('L',ev,o.rent,[]);let Z=null;if(o.svc.length)Z=mkBook('Z',ev,0,o.svc);if(o.paid>0)mkRec(L.id,o.paid,o.pm);return ev}
+function addExtra(ev,svc,amt,cost){const L=hall(ev);S.ex.push({id:S.ex.length+1,ev:ev.id,svc,amt,cost});L.total+=amt;L.inst=sched(L.total,ev.date);
+ post('ز-'+S.ex.length,'خدمة إضافية: '+svc+' ('+ev.no+')',[['1100',amt,0],['4100',0,amt]],'L');log('إضافة خدمة «'+svc+'» '+money(amt)+' للحفل '+ev.no);if(cost>0)addExp(svc+' (صرف)',cost,'5300','cash','L',ev.id,'extra')}
+const hall=ev=>S.book.find(b=>b.ev===ev.id&&b.e==='L'&&b.st!=='cancel'),coordB=ev=>S.book.find(b=>b.ev===ev.id&&b.e==='Z'&&b.st!=='cancel');
+function evCalc(ev){const L=hall(ev),Z=coordB(ev),ex=S.ex.filter(x=>x.ev===ev.id),xs=S.exp.filter(e=>e.ev===ev.id);
+ const exAmt=sum(ex,x=>x.amt),exCost=sum(ex,x=>x.cost),rent=L?L.base:0,coord=Z?Z.total:0,rentExp=sum(xs.filter(e=>e.sec==='rent'),e=>e.amt),coordExp=sum(xs.filter(e=>e.sec==='coord'),e=>e.amt);
+ return {L,Z,ex,xs,exAmt,exCost,rent,coord,rentExp,coordExp,netRent:rent-rentExp,netExtra:exAmt-exCost,netCoord:coord-coordExp,office:ev.pct/100*(exAmt-exCost),rev:rent+coord+exAmt,exps:rentExp+coordExp+exCost,net:rent-rentExp+exAmt-exCost+coord-coordExp}}
+const evSt=ev=>{const bs=S.book.filter(b=>b.ev===ev.id&&b.st!=='cancel');return !bs.length?'ملغي':bs.every(b=>b.st==='done')?'منتهي':'جارٍ'};
+function seed(){S={cust:[],book:[],rec:[],exp:[],jr:[],log:[],ev:[],ex:[],seq:{L:1,Z:1,R:1},lock:''};
+ const e1=mkEvent({name:'محمد العتيبي',phone:'0551234567',idn:'1090011223',date:addDays(6),kind:'حفل زواج',rent:17000,svc:[['كوشة ملكية',7000],['طاولات وتزيين',3200],['ضيافة وحلويات',2000]],paid:5100,pm:'bank'});
+ mkRec(coordB(e1).id,3660,'card');
+ [['قهوة الرجال',750],['قهوة النساء',1080],['طبخ',1200],['مشرفة',200],['بوفية المعالي',1800]].forEach(x=>addExp(x[0],x[1],'5300','cash','L',e1.id,'rent'));
+ [['مولد كهرباء',600,370],['إضاءة إضافية',240,160],['بوفيه إضافي',900,650]].forEach(x=>addExtra(e1,x[0],x[1],x[2]));
+ [['جوالات',100],['زينة وورد',600],['فاترينات (٢)',250]].forEach(x=>addExp(x[0],x[1],'5300','cash','Z',e1.id,'coord'));
+ mkEvent({name:'فهد الدوسري',phone:'0533344556',idn:'1070055443',date:addDays(20),kind:'حفل خطوبة',rent:12000,svc:[],paid:3600,pm:'cash'});
+ mkEvent({name:'عمر الشمري',phone:'0544455667',idn:'1055566778',date:addDays(45),kind:'حفل زواج',rent:20000,svc:[['كوشة',6000],['ضيافة',3000]],paid:0,pm:'cash'});
+ addExp('كهرباء وماء — الشهر الحالي',1850,'5200','cash','');addExp('رواتب مشرفين',2600,'5100','bank','')}
 function load(){try{const j=localStorage.getItem(KEY);if(j){S=JSON.parse(j);return}}catch(e){}seed()}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
-/* ---- الواجهة ---- */
-const NAV=[['dash','عين المدير'],['book','العقود والفواتير'],['rec','سندات القبض'],['exp','المصروفات'],['cal','تقويم الحجوزات'],['cust','العملاء (تلقائي)'],['daily','الكشف اليومي'],['reports','التقارير والإقفال'],['ledger','القيود المحاسبية'],['audit','سجل العمليات']];
-function nav(){$('#rail').innerHTML=`<div class="brand"><div class="mono">ق</div><div><b>ليالي الديار<br>وزوايا المعالي</b><small>نظام ERP · نسخة 2</small></div></div>`+NAV.filter(([k])=>!ROLES[role].hide.includes(k)).map(([k,t])=>`<button data-v="${k}" ${k===view?'aria-current="page"':''}>${t}</button>`).join('')+`<div class="sp"></div><label style="font-size:12px;color:#b9b8d6">المستخدم الحالي<select id="role">${Object.entries(ROLES).map(([k,r])=>`<option value="${k}" ${k===role?'selected':''}>${r.n} · ${r.t}</option>`).join('')}</select></label><button data-v="theme">تبديل الوضع الداكن</button><button data-v="reset">إعادة البيانات التجريبية</button>`}
+const NAV=[['dash','لوحة المدير'],['events','الحفلات'],['rec','سندات القبض'],['exp','المصروفات العامة'],['cal','تقويم الحجوزات'],['cust','العملاء (تلقائي)'],['daily','الكشف اليومي'],['reports','التقارير والإقفال'],['ledger','القيود المحاسبية'],['audit','سجل العمليات']];
+function nav(){$('#rail').innerHTML=`<div class="brand"><div class="mono">ق</div><div><b>ليالي الديار<br>وزوايا المعالي</b><small>نظام ERP · نسخة 3</small></div></div>`+NAV.filter(([k])=>!ROLES[role].hide.includes(k)).map(([k,t])=>`<button data-v="${k}" ${k===view?'aria-current="page"':''}>${t}</button>`).join('')+`<div class="sp"></div><label style="font-size:12px;color:#b9b8d6">المستخدم الحالي<select id="role">${Object.entries(ROLES).map(([k,r])=>`<option value="${k}" ${k===role?'selected':''}>${r.n} · ${r.t}</option>`).join('')}</select></label><button data-v="theme">تبديل الوضع الداكن</button><button data-v="reset">إعادة البيانات التجريبية</button>`}
 const inF=x=>flt==='ALL'||x.e===flt;
 const seg=()=>`<div class="seg" role="group" aria-label="تصفية الكيان">${[['ALL','الرؤية المجمعة'],['L','ليالي الديار'],['Z','زوايا المعالي']].map(([k,t])=>`<button data-f="${k}" aria-pressed="${flt===k}">${t}</button>`).join('')}</div>`;
 const head=t=>`<div class="top"><div><h1>${t}</h1><div class="date">${hij(today())} · ${greg(today())} م</div></div>${seg()}</div>`;
 const tag=e=>`<span class="tag ${ENT[e].k}">${ENT[e].n}</span>`,st=b=>`<span class="tag ${STAT[b.st][1]}">${STAT[b.st][0]}</span>`;
-const live=()=>S.book.filter(b=>b.st!=='cancel'&&inF(b));
-function V_dash(){
- const bs=live(),rv=bs.reduce((x,b)=>x+b.total,0),ex=S.exp.filter(e=>flt==='ALL'||e.e===flt).reduce((x,e)=>x+e.amt,0);
- const col=S.rec.filter(r=>r.st==='ok'&&inF(r)).reduce((x,r)=>x+r.amt,0),rem=bs.reduce((x,b)=>x+outOf(b),0);
- const all=bs.flatMap(dues),late=all.filter(d=>d.late),lateSum=late.reduce((x,d)=>x+d.rem,0);
+function agg(){const iL=flt!=='Z',iZ=flt!=='L',o={rent:0,coord:0,exAmt:0,exps:0,netMen:0,netCoord:0};
+ S.ev.forEach(ev=>{const c=evCalc(ev);if(iL){o.rent+=c.rent;o.exAmt+=c.exAmt;o.netMen+=c.netRent+c.netExtra;o.exps+=c.rentExp+c.exCost}if(iZ){o.coord+=c.coord;o.netCoord+=c.netCoord;o.exps+=c.coordExp}});
+ o.gen=sum(S.exp.filter(e=>!e.ev&&(flt==='ALL'||e.e===flt)),e=>e.amt);return o}
+const cell=(l,v,h)=>`<div class="${h?'hl':''}"><small>${l}</small><b>${v}</b></div>`;
+function V_dash(){const o=agg(),bs=S.book.filter(b=>b.st!=='cancel'&&inF(b)),col=sum(S.rec.filter(r=>r.st==='ok'&&inF(r)),r=>r.amt),rem=sum(bs,outOf);
+ const all=bs.flatMap(dues),lateSum=sum(all.filter(d=>d.late),d=>d.rem);
  const soon=all.filter(d=>d.due<=addDays(7)).sort((a,b)=>a.due<b.due?-1:1).filter((d,i,a)=>a.findIndex(x=>x.b===d.b)===i);
- const hall=new Set(S.book.filter(b=>b.e==='L'&&b.st!=='cancel'&&b.date>=today()&&b.date<addDays(30)).map(b=>b.date)).size;
- const byE=e=>S.book.filter(b=>b.e===e&&b.st!=='cancel').reduce((x,b)=>x+b.total,0),mx=Math.max(byE('L'),byE('Z'),1);
- return head('عين المدير')+(flt!=='ALL'?`<div class="note">المصروفات العامة غير المنسوبة لكيان تظهر في الرؤية المجمعة فقط.</div>`:'')+`
- <div class="grid kpis"><div class="kpi"><span>إجمالي الإيرادات</span><b class="num">${money(rv)}</b></div><div class="kpi"><span>المتحصل فعلياً</span><b class="num">${money(col)}</b></div>
- <div class="kpi"><span>إجمالي المصروفات</span><b class="num">${money(ex)}</b></div><div class="kpi"><span>المتبقي لدى العملاء</span><b class="num" style="color:var(--warn)">${money(rem)}</b></div>
- <div class="kpi"><span>دفعات متأخرة</span><b class="num" style="color:var(--bad)">${money(lateSum)}</b></div><div class="kpi"><span>إشغال القاعة خلال ٣٠ يوماً</span><b class="num">${hall} / 30</b></div>
- <div class="kpi net"><span>الصافي المالي</span><b class="num">${money(rv-ex)}</b></div></div>
+ const hallD=new Set(S.book.filter(b=>b.e==='L'&&b.st!=='cancel'&&b.date>=today()&&b.date<addDays(30)).map(b=>b.date)).size;
+ return head('ملخص الأرباح')+(flt!=='ALL'?`<div class="note">المصروفات العامة غير المنسوبة لكيان تظهر في الرؤية المجمعة فقط.</div>`:'')+`
+ <div class="sum">${cell('إجمالي عقود الإيجار فقط',money(o.rent))}${cell('إجمالي الزيادات',money(o.exAmt))}${cell('إجمالي عقود التنسيق',money(o.coord))}${cell('إجمالي إيراد المنشأة',money(o.rent+o.exAmt+o.coord),1)}
+ ${cell('إجمالي مصاريف العقود',money(o.exps))}${cell('صافي إيرادات الرجال',money(o.netMen))}${cell('صافي التنسيق',money(o.netCoord))}${cell('المصروفات العامة',money(o.gen))}${cell('إجمالي صافي الربح',money(o.netMen+o.netCoord-o.gen),1)}</div>
+ <div class="grid kpis"><div class="kpi"><span>المتحصل فعلياً</span><b class="num">${money(col)}</b></div><div class="kpi"><span>المتبقي لدى العملاء</span><b class="num" style="color:var(--warn)">${money(rem)}</b></div><div class="kpi"><span>دفعات متأخرة</span><b class="num" style="color:var(--bad)">${money(lateSum)}</b></div><div class="kpi"><span>إشغال القاعة خلال ٣٠ يوماً</span><b class="num">${hallD} / 30</b></div></div>
  <div class="grid two"><div class="card"><h2>تنبيهات التحصيل</h2>${soon.map(d=>`<div class="al"><span><b>${esc(cn(d.b.cid))}</b> · ${d.b.no} · ${d.l}</span><span class="num"><span class="tag ${d.late?'bd':'wr'}">${d.late?'متأخرة منذ '+greg(d.due):'تستحق '+greg(d.due)}</span> ${money(d.rem)}</span></div>`).join('')||'<div class="empty">لا توجد دفعات مستحقة خلال أسبوع</div>'}
  <h2 style="margin-top:20px">سجل الحركة المباشر</h2><ul class="feed">${S.log.slice(0,6).map(l=>`<li><div><b>${esc(l.a)}</b><time>${esc(l.u)} · ${new Date(l.t).toLocaleTimeString('ar-SA-u-nu-latn',{hour:'2-digit',minute:'2-digit'})}</time></div></li>`).join('')}</ul></div>
- <div class="card"><h2>الإيراد حسب الكيان</h2>${['L','Z'].map(e=>`<p style="margin:0 0 12px"><span style="display:flex;justify-content:space-between"><b>${ENT[e].n}</b><span class="num">${money(byE(e))}</span></span><span class="bar" style="display:block;margin-top:5px"><i style="width:${byE(e)/mx*100}%;background:${e==='L'?'#110f43':'#9a3b6b'}"></i></span></p>`).join('')}
- <h2 style="margin-top:20px">أقرب المناسبات</h2>${bs.filter(b=>b.date>=today()).sort((a,b)=>a.date<b.date?-1:1).slice(0,4).map(b=>`<div class="al"><span>${esc(cn(b.cid))} <small style="color:var(--muted)">${b.kind}</small></span><span class="num">${greg(b.date)}</span></div>`).join('')}</div></div>`}
-function V_book(){
- const rows=S.book.filter(inF).map(b=>{const p=paidOf(b),r=outOf(b);return `<tr><td>${b.no}</td><td>${tag(b.e)}</td><td>${esc(cn(b.cid))}</td><td>${greg(b.date)}</td><td>${st(b)}</td><td class="n">${money(b.total)}</td><td class="n">${money(p)}</td><td class="n">${b.st==='cancel'?(p?`<span class="tag wr">محتجز ${money(p)}</span>`:'—'):`<span class="tag ${r?'wr':'ok'}">${r?money(r):'مسدد'}</span>`}</td><td class="n"><button class="btn sm alt" data-doc="${b.id}">${b.e==='L'?'العقد':'الفاتورة'}</button> ${b.e==='Z'?`<button class="btn sm alt" data-svc="${b.id}">ورقة الخدمات</button> `:''}${b.st==='req'?`<button class="btn sm" data-act="conf" data-id="${b.id}">تأكيد</button> `:''}${b.st==='conf'?`<button class="btn sm" data-act="done" data-id="${b.id}">إكمال</button> `:''}${b.st==='req'||b.st==='conf'?`<button class="btn sm alt" data-act="cancelb" data-id="${b.id}">إلغاء</button>`:''}</td></tr>`}).join('');
- return head('العقود والفواتير')+`<div class="card" style="margin-bottom:14px"><h2>إصدار جديد</h2><p class="note">يُحفظ ملف العميل تلقائياً عند أول عقد. الحجز بلا عربون يبقى «مبدئياً» ولا يؤكد قبل سداد العربون (٣٠٪)، والإلغاء يتم بقيد عكسي بدل الحذف.</p>
- <form class="f" id="fb"><label>الجهة<select id="b-e"><option value="L">عقد قاعة · ليالي الديار</option><option value="Z">فاتورة تنسيق · زوايا المعالي</option></select></label>
- <label>اسم العميل<input id="b-n" required value="خالد المطيري"></label><label>رقم الجوال<input id="b-p" required value="0561112233" inputmode="tel"></label><label>رقم الهوية<input id="b-i" value="1066677889"></label>
- <label>تاريخ المناسبة<input id="b-d" type="date" required value="${addDays(60)}"></label><label>نوع المناسبة<input id="b-k" value="حفل زواج"></label>
- <label id="lb-a">قيمة إيجار القاعة (ر.س)<input id="b-a" type="number" min="1" value="15000"></label>
- <label>العربون المدفوع<input id="b-r" type="number" min="0" value="4500"></label><label>طريقة الدفع<select id="b-m"><option value="cash">نقد</option><option value="card">شبكة</option><option value="bank">تحويل بنكي</option></select></label>
- <button class="btn" type="submit">إصدار</button></form></div>
- <div class="card"><div class="tw"><table><thead><tr><th>الرقم</th><th>الجهة</th><th>العميل</th><th>التاريخ</th><th>الحالة</th><th>الإجمالي</th><th>المدفوع</th><th>المتبقي</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`}
+ <div class="card"><h2>الحفلات القادمة</h2>${S.ev.filter(e=>evSt(e)==='جارٍ').sort((a,b)=>a.date<b.date?-1:1).map(e=>{const c=evCalc(e);return `<div class="al"><span><button class="btn sm alt" data-ev="${e.id}">${e.no}</button> ${esc(cn(e.cid))} <small style="color:var(--muted)">${e.kind}</small></span><span class="num">${greg(e.date)} · صافي ${money(c.net)}</span></div>`}).join('')}</div></div>`}
+const lines=(a,k,del)=>a.map(e=>`<tr><td>${esc(e.t)}</td><td class="n">${num(e.amt)}</td></tr>`).join('');
+function evSheet(ev){const c=evCalc(ev),L=c.L,Z=c.Z,bsAll=S.book.filter(b=>b.ev===ev.id);
+ const docRow=b=>`<tr><td>${b.no}</td><td>${tag(b.e)}</td><td>${st(b)}</td><td class="n">${money(b.total)}</td><td class="n">${money(paidOf(b))}</td><td class="n">${money(outOf(b))}</td><td class="n"><button class="btn sm alt" data-doc="${b.id}">${b.e==='L'?'العقد':'الفاتورة'}</button> ${b.e==='Z'?`<button class="btn sm alt" data-svc="${b.id}">ورقة الخدمات</button> `:''}${b.st==='req'?`<button class="btn sm" data-act="conf" data-id="${b.id}">تأكيد</button> `:''}${b.st==='conf'?`<button class="btn sm" data-act="done" data-id="${b.id}">إكمال</button> `:''}${b.st==='req'||b.st==='conf'?`<button class="btn sm alt" data-act="cancelb" data-id="${b.id}">إلغاء</button>`:''}</td></tr>`;
+ const rcs=S.rec.filter(r=>bsAll.some(b=>b.id===r.bid)),open=bsAll.filter(b=>outOf(b)>0);
+ const panelA=`<div class="xp"><h3>بيان عقد الإيجار · ليالي الديار</h3><table><tbody><tr><td>مبلغ العقد</td><td class="n">${num(c.rent)}</td></tr><tr class="yl"><td colspan="2">مصاريف عقد الإيجار</td></tr>${lines(c.xs.filter(e=>e.sec==='rent'))}<tr class="yl"><td>إجمالي مصاريف العقد</td><td class="n">${num(c.rentExp)}</td></tr><tr class="bl"><td>الصافي</td><td class="n">${num(c.netRent)}</td></tr></tbody></table>
+  ${L&&can('exp')?`<form class="mf" id="fe1"><input id="a-t" list="dl" placeholder="البند" required><input id="a-a" type="number" min="1" placeholder="المبلغ" required><button class="btn" type="submit">إضافة</button></form><datalist id="dl"><option>قهوة الرجال<option>قهوة النساء<option>طبخ<option>مشرفة<option>بوفية المعالي<option>عصير</datalist>`:''}</div>`;
+ const panelB=`<div class="xp"><h3>الخدمات الإضافية للرجال والنساء</h3><table><thead><tr><th>الخدمة</th><th>المبلغ</th><th>صرف</th><th>الصافي</th></tr></thead><tbody>${c.ex.map(x=>`<tr><td>${esc(x.svc)}</td><td class="n">${num(x.amt)}</td><td class="n">${num(x.cost)}</td><td class="n">${num(x.amt-x.cost)}</td></tr>`).join('')}<tr class="yl"><td>الإجمالي</td><td class="n">${num(c.exAmt)}</td><td class="n">${num(c.exCost)}</td><td class="n">${num(c.netExtra)}</td></tr>
+  <tr><td>نسبة المكتب</td><td class="n" colspan="2"><input id="pct" type="number" min="0" max="100" value="${ev.pct}" style="width:70px;padding:2px 6px"> ٪</td><td class="n">${num(c.office)}</td></tr><tr class="bl"><td colspan="3">صافي الخدمات الإضافية</td><td class="n">${num(c.netExtra)}</td></tr></tbody></table>
+  ${L&&L.st!=='done'&&can('exp')?`<form class="mf" id="fx"><input id="x-s" placeholder="الخدمة" required><input id="x-a" type="number" min="1" placeholder="المبلغ" required><input id="x-c" type="number" min="0" placeholder="صرف" value="0"><button class="btn" type="submit">إضافة</button></form>`:''}</div>`;
+ const panelC=`<div class="xp"><h3>تنسيق النساء · زوايا المعالي</h3>${Z?`<table><tbody><tr><td>عقد تنسيق ${Z.no}</td><td class="n">${num(c.coord)}</td></tr>${Z.items.map(i=>`<tr><td style="color:var(--muted)">· ${esc(i[0])}</td><td class="n" style="color:var(--muted)">${num(i[1])}</td></tr>`).join('')}<tr class="yl"><td>المصروف</td><td></td></tr>${lines(c.xs.filter(e=>e.sec==='coord'))}<tr class="yl"><td>إجمالي المصروف</td><td class="n">${num(c.coordExp)}</td></tr><tr class="bl"><td>الصافي</td><td class="n">${num(c.netCoord)}</td></tr></tbody></table>${can('exp')?`<form class="mf" id="fe2"><input id="c-t" placeholder="البند" required><input id="c-a" type="number" min="1" placeholder="المبلغ" required><button class="btn" type="submit">إضافة</button></form>`:''}`
+  :`<div class="empty">لا يوجد عقد تنسيق لهذا الحفل</div><form class="mf" id="fz"><input id="z-s" value="كوشة:6000,ضيافة:3000" required><button class="btn" type="submit">إصدار فاتورة تنسيق</button></form>`}</div>`;
+ return `<div class="xh"><span>العميل: <b>${esc(cn(ev.cid))}</b></span><span>رقم الحفل: <b>${ev.no}</b></span><span>${ev.kind}</span><span>التاريخ: <b>${hij(ev.date)}</b> · ${greg(ev.date)}</span><span>القاعة: <b>ليالي الديار</b></span><span class="tag ${evSt(ev)==='منتهي'?'bd':'ok'}">${evSt(ev)}</span></div>
+ <div class="card" style="border-radius:0;margin-top:-1px"><div class="tw"><table><thead><tr><th>المستند</th><th>الجهة</th><th>الحالة</th><th>الإجمالي</th><th>المدفوع</th><th>المتبقي</th><th></th></tr></thead><tbody>${bsAll.map(docRow).join('')}</tbody></table></div></div>
+ <div class="evg">${panelA}${panelB}${panelC}</div>
+ <div class="sum">${cell('إجمالي إيراد الحفل',money(c.rev))}${cell('إجمالي المصاريف',money(c.exps))}${cell('صافي القاعة والزيادات',money(c.netRent+c.netExtra))}${cell('صافي التنسيق',money(c.netCoord))}${cell('صافي ربح الحفل',money(c.net),1)}</div>
+ <div class="grid two"><div class="card"><h2>بيان سندات القبض</h2><div class="tw"><table><thead><tr><th>السند</th><th>الجهة</th><th>الدفع</th><th>المبلغ</th><th></th></tr></thead><tbody>${rcs.map(r=>`<tr style="${r.st==='void'?'opacity:.5;text-decoration:line-through':''}"><td>${r.no}</td><td>${tag(r.e)}</td><td>${PAY[r.pm]}</td><td class="n">${money(r.amt)}</td><td class="n"><button class="btn sm alt" data-rc="${r.id}">عرض</button> ${r.st==='ok'&&can('cancel')?`<button class="btn sm alt" data-act="voidr" data-id="${r.id}">إلغاء</button>`:''}</td></tr>`).join('')}</tbody></table></div>
+  ${open.length?`<form class="mf" id="fr2"><select id="r-b">${open.map(b=>`<option value="${b.id}">${b.no} · ${ENT[b.e].n} · متبقي ${money(outOf(b))}</option>`).join('')}</select><input id="r-a" type="number" min="1" placeholder="المبلغ" required><select id="r-m"><option value="cash">نقد</option><option value="card">شبكة</option><option value="bank">تحويل بنكي</option></select><button class="btn" type="submit">سند قبض</button></form>`:''}</div>
+ <div class="card"><h2>ملاحظات وتوقيع الإدارة</h2><textarea id="note" placeholder="ملاحظات الحفل">${esc(ev.note)}</textarea><div class="sg" style="display:flex;justify-content:space-between;margin-top:26px;color:var(--muted);font-size:13px"><span>توقيع مدير القاعة</span><span>توقيع المحاسب</span></div></div></div>`}
+function V_events(){const tabs=`<div class="tabs" role="tablist">${S.ev.map(e=>`<button role="tab" data-ev="${e.id}" aria-pressed="${cur===e.id}" class="${evSt(e)==='منتهي'?'fin':''}" title="${esc(cn(e.cid))}">${e.id}</button>`).join('')}<button class="nw" data-ev="new" aria-pressed="${cur==='new'}">+ حفل جديد</button></div>`;
+ if(cur==='new')return head('حفل جديد')+tabs+`<div class="card"><p class="note">يُنشأ عقد القاعة تلقائياً، ويضاف عقد التنسيق إن كتبت الخدمات. ملف العميل يُحفظ تلقائياً.</p><form class="f" id="fev"><label>اسم العميل<input id="n-n" required value="خالد المطيري"></label><label>رقم الجوال<input id="n-p" required value="0561112233" inputmode="tel"></label><label>رقم الهوية<input id="n-i" value="1066677889"></label><label>تاريخ الحفل<input id="n-d" type="date" required value="${addDays(60)}"></label><label>نوع المناسبة<input id="n-k" value="حفل زواج"></label><label>مبلغ عقد الإيجار<input id="n-r" type="number" min="1" required value="15000"></label><label>خدمات التنسيق (اسم:سعر، فاصلة بينها، أو اتركها فارغة)<input id="n-s" value="كوشة:6000,طاولات:2500"></label><label>العربون المدفوع (للقاعة)<input id="n-a" type="number" min="0" value="4500"></label><label>طريقة الدفع<select id="n-m"><option value="cash">نقد</option><option value="card">شبكة</option><option value="bank">تحويل بنكي</option></select></label><button class="btn" type="submit">إنشاء الحفل</button></form></div>`;
+ const ev=S.ev.find(e=>e.id===cur)||S.ev[0];return head('الحفلات')+tabs+evSheet(ev)}
+function V_exp(){return head('المصروفات العامة')+(can('exp')?`<div class="card" style="margin-bottom:14px"><p class="note">مصاريف الحفلات تُسجَّل من ورقة الحفل. هذه الشاشة للمصروفات العامة للمنشأة.</p><form class="f" id="fe"><label>البيان<input id="e-t" required value="صيانة التكييف"></label><label>المبلغ<input id="e-a" type="number" min="1" required value="750"></label><label>التصنيف<select id="e-c">${['5100','5200','5300','5400'].map(k=>`<option value="${k}">${ACC[k]}</option>`).join('')}</select></label><label>الكيان<select id="e-e"><option value="">عام للمنشأة</option><option value="L">ليالي الديار</option><option value="Z">زوايا المعالي</option></select></label><label>الدفع<select id="e-m"><option value="cash">نقد</option><option value="bank">تحويل بنكي</option></select></label><button class="btn" type="submit">تسجيل المصروف</button></form></div>`:'<div class="note">صلاحية تسجيل المصروفات غير متاحة لهذا المستخدم.</div>')+`<div class="card"><div class="tw"><table><thead><tr><th>التاريخ</th><th>البيان</th><th>الحفل</th><th>الكيان</th><th>التصنيف</th><th>المبلغ</th></tr></thead><tbody>${S.exp.filter(e=>flt==='ALL'||e.e===flt).map(e=>`<tr><td>${greg(e.date)}</td><td>${esc(e.t)}</td><td>${e.ev?S.ev.find(x=>x.id===e.ev).no:'—'}</td><td>${e.e?tag(e.e):'عام'}</td><td>${ACC[e.acc]}</td><td class="n">${money(e.amt)}</td></tr>`).join('')}</tbody></table></div></div>`}
 function V_rec(){
  const rows=S.rec.filter(inF).map(r=>{const b=S.book.find(x=>x.id===r.bid);return `<tr style="${r.st==='void'?'opacity:.55;text-decoration:line-through':''}"><td>${r.no}</td><td>${tag(r.e)}</td><td>${esc(cn(b.cid))}</td><td>${b.no}</td><td>${PAY[r.pm]}</td><td class="n">${money(r.amt)}</td><td class="n"><button class="btn sm alt" data-rc="${r.id}">عرض</button> ${r.st==='ok'&&can('cancel')?`<button class="btn sm alt" data-act="voidr" data-id="${r.id}">إلغاء</button>`:r.st==='void'?'<span class="tag bd">ملغى</span>':''}</td></tr>`}).join('');
  const open=S.book.filter(b=>inF(b)&&outOf(b)>0);
  return head('سندات القبض')+`<div class="card" style="margin-bottom:14px"><h2>سند قبض جديد</h2><form class="f" id="fr"><label>العقد / الفاتورة<select id="r-b">${open.map(b=>`<option value="${b.id}">${b.no} · ${esc(cn(b.cid))} · متبقي ${money(outOf(b))}</option>`).join('')||'<option value="">لا توجد مبالغ متبقية</option>'}</select></label><label>المبلغ<input id="r-a" type="number" min="1" required></label><label>طريقة الدفع<select id="r-m"><option value="cash">نقد</option><option value="card">شبكة</option><option value="bank">تحويل بنكي</option></select></label><button class="btn" type="submit">إصدار السند</button></form><p class="note" style="margin:0">يصدر السند باسم الجهة المرتبطة بالعقد، ويُوزَّع على الدفعات بالترتيب، ويُلغى بقيد عكسي.</p></div>
  <div class="card"><div class="tw"><table><thead><tr><th>السند</th><th>الجهة</th><th>العميل</th><th>المرجع</th><th>الدفع</th><th>المبلغ</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`}
-function V_exp(){
- return head('المصروفات')+(can('exp')?`<div class="card" style="margin-bottom:14px"><form class="f" id="fe"><label>البيان<input id="e-t" required value="صيانة التكييف"></label><label>المبلغ<input id="e-a" type="number" min="1" required value="750"></label><label>التصنيف<select id="e-c">${['5100','5200','5300','5400'].map(k=>`<option value="${k}">${ACC[k]}</option>`).join('')}</select></label><label>الكيان<select id="e-e"><option value="">عام للمنشأة</option><option value="L">ليالي الديار</option><option value="Z">زوايا المعالي</option></select></label><label>الدفع<select id="e-m"><option value="cash">نقد</option><option value="bank">تحويل بنكي</option></select></label><button class="btn" type="submit">تسجيل المصروف</button></form></div>`:'<div class="note">صلاحية تسجيل المصروفات غير متاحة لهذا المستخدم.</div>')+`
- <div class="card"><div class="tw"><table><thead><tr><th>التاريخ</th><th>البيان</th><th>الكيان</th><th>التصنيف</th><th>الدفع</th><th>المبلغ</th></tr></thead><tbody>${S.exp.filter(e=>flt==='ALL'||e.e===flt).map(e=>`<tr><td>${greg(e.date)}</td><td>${esc(e.t)}</td><td>${e.e?tag(e.e):'عام'}</td><td>${ACC[e.acc]}</td><td>${PAY[e.pm]}</td><td class="n">${money(e.amt)}</td></tr>`).join('')}</tbody></table></div></div>`}
 function V_cal(){
  const base=new Date();base.setDate(1);base.setMonth(base.getMonth()+cm);const y=base.getFullYear(),m=base.getMonth(),n=new Date(y,m+1,0).getDate(),w=base.getDay();
  const iso=d=>`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,DN=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
@@ -189,19 +217,18 @@ function V_ledger(){const T=[0,0];S.jr.forEach(j=>j.lines.forEach(l=>{T[0]+=l[1]
  return head('القيود المحاسبية')+`<div class="note">قيد مزدوج تلقائي خلف كل مستند، ويحمل الكيان كبُعد محاسبي. كل قيد مرتبط بتجزئة القيد السابق ولا يُحذف، بل يُعكس. مجموع المدين ${money(T[0])} والدائن ${money(T[1])} ${T[0]===T[1]?'<span class="tag ok">متوازن</span>':'<span class="tag bd">غير متوازن</span>'} · سلسلة القيود ${bad?`<span class="tag bd">تالفة عند القيد ${bad}</span>`:'<span class="tag ok">سليمة</span>'}</div>
  <div class="card"><div class="tw"><table><thead><tr><th>القيد</th><th>المرجع</th><th>البيان</th><th>الكيان</th><th>الحساب</th><th>مدين</th><th>دائن</th><th>التجزئة</th></tr></thead><tbody>${S.jr.slice().reverse().map(j=>j.lines.map((l,i)=>`<tr><td>${i?'':j.id}</td><td>${i?'':j.ref}</td><td>${i?'':esc(j.desc)}</td><td>${i?'':(j.e?tag(j.e):'عام')}</td><td>${l[0]} ${ACC[l[0]]}</td><td class="n">${l[1]?money(l[1]):''}</td><td class="n">${l[2]?money(l[2]):''}</td><td class="n" dir="ltr">${i?'':j.h}</td></tr>`).join('')).join('')}</tbody></table></div></div>`}
 function V_audit(){return head('سجل العمليات')+`<div class="card"><div class="tw"><table><thead><tr><th>الوقت</th><th>الموظف</th><th>العملية</th></tr></thead><tbody>${S.log.map(l=>`<tr><td class="n">${new Date(l.t).toLocaleString('ar-SA-u-nu-latn')}</td><td>${esc(l.u)}</td><td>${esc(l.a)}</td></tr>`).join('')}</tbody></table></div></div>`}
-const V={dash:V_dash,book:V_book,rec:V_rec,exp:V_exp,cal:V_cal,cust:V_cust,daily:V_daily,reports:V_reports,ledger:V_ledger,audit:V_audit};
-function render(){if(ROLES[role].hide.includes(view))view='dash';nav();$('#main').innerHTML=V[view]();const sel=$('#b-e');if(sel)sel.onchange=bkSwitch;save()}
-function bkSwitch(){const z=$('#b-e').value==='Z';$('#lb-a').innerHTML=z?'الخدمات (اسم:سعر، مفصولة بفاصلة)<input id="b-a" value="كوشة:6000,طاولات:2500,ضيافة:3500">':'قيمة إيجار القاعة (ر.س)<input id="b-a" type="number" min="1" value="15000">'}
 function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.append(e);setTimeout(()=>e.remove(),3200)}
 function sheet(inner,e){$('#layer').innerHTML=`<div class="modal" data-close><div class="sheet" style="--c:${e?ENT[e].c:'#110f43'}">${inner}<div class="sg" style="margin-top:28px"><button class="btn alt" data-close>إغلاق</button><span style="color:#666;font-size:12px">معاينة المستند. تصدير PDF بخط Cairo يأتي في المرحلة التالية.</span></div></div></div>`}
 const shHd=(e,t,no)=>`<div class="hd"><div style="display:flex;gap:12px;align-items:center"><div class="mono">${e?ENT[e].m:'ق'}</div><div><h3>${e?ENT[e].n:'ليالي الديار وزوايا المعالي'}</h3><small>${e?ENT[e].sec:'كشف موحد'}</small></div></div><div style="text-align:left"><b>${t}</b><br>${no}<br><small>${hij(today())}</small></div></div>`;
 const instT=b=>`<table><thead><tr><th>الدفعة</th><th>الاستحقاق</th><th>المبلغ</th></tr></thead><tbody>${b.inst.map(i=>`<tr><td>${i.l}</td><td>${greg(i.due)}</td><td>${money(i.amt)}</td></tr>`).join('')}</tbody></table>`;
-function docB(id){const b=S.book.find(x=>x.id===id),p=paidOf(b);
- sheet(shHd(b.e,b.e==='L'?'عقد إيجار قاعة':'فاتورة خدمات تنسيق',b.no)+`<p>الطرف الثاني: <b>${esc(cn(b.cid))}</b> · جوال ${esc(S.cust.find(c=>c.id===b.cid).phone)}<br>المناسبة: ${b.kind} بتاريخ <b>${greg(b.date)}</b> · الحالة: ${STAT[b.st][0]}</p>`+(b.e==='Z'?`<table><thead><tr><th>الخدمة</th><th>السعر</th></tr></thead><tbody>${b.items.map(i=>`<tr><td>${esc(i[0])}</td><td>${money(i[1])}</td></tr>`).join('')}</tbody></table>`:`<p>يؤجر الطرف الأول القاعة للطرف الثاني في التاريخ المذكور، ويلتزم الطرف الثاني بسداد القيمة وفق جدول الدفعات وبالمحافظة على محتويات القاعة.</p>`)+`<h4>جدول الدفعات</h4>${instT(b)}<p>الإجمالي: <b>${money(b.total)}</b> · المدفوع: ${money(p)} · المتبقي: <b>${money(outOf(b))}</b></p><div class="sg"><span>توقيع الطرف الأول</span><span>توقيع الطرف الثاني</span></div>`,b.e)}
 function svcB(id){const b=S.book.find(x=>x.id===id);sheet(shHd('Z','ورقة الخدمات التشغيلية',b.no)+`<p>العميلة: <b>${esc(cn(b.cid))}</b> · المناسبة: ${b.kind} · ${greg(b.date)}</p><table><thead><tr><th>الخدمة المطلوبة</th><th>تم التنفيذ</th></tr></thead><tbody>${b.items.map(i=>`<tr><td>${esc(i[0])}</td><td>☐</td></tr>`).join('')}</tbody></table><p>ملاحظات الفريق الميداني: ____________________</p><div class="sg"><span>المرسل</span><span>مشرفة التنفيذ</span></div>`,'Z')}
 function recB(id){const r=S.rec.find(x=>x.id===id),b=S.book.find(x=>x.id===r.bid);sheet(shHd(r.e,'سند قبض',r.no)+`<p>استلمنا من: <b>${esc(cn(b.cid))}</b><br>مبلغ وقدره: <b>${money(r.amt)}</b> · طريقة الدفع: ${PAY[r.pm]}<br>وذلك عن: ${b.e==='L'?'عقد قاعة':'فاتورة تنسيق'} ${b.no}<br>المتبقي بعد السند: ${money(outOf(b))}${r.st==='void'?'<br><b style="color:#b3261e">هذا السند ملغى بقيد عكسي</b>':''}</p><div class="sg"><span>المستلم</span><span>ختم الجهة</span></div>`,r.e)}
 function stmt(id){const c=S.cust.find(x=>x.id===id),ev=[];S.book.filter(b=>b.cid===id).forEach(b=>{ev.push([b.created,b.no+' '+(b.e==='L'?'عقد قاعة':'فاتورة تنسيق'),b.total,0]);if(b.st==='cancel')ev.push([b.created,'إلغاء '+b.no+' (قيد عكسي)',0,b.total]);S.rec.filter(r=>r.bid===b.id&&r.st==='ok').forEach(r=>ev.push([r.date,'سند قبض '+r.no,0,r.amt]))});let run=0;
  sheet(shHd(null,'كشف حساب عميل',esc(c.name))+`<table><thead><tr><th>التاريخ</th><th>البيان</th><th>مدين</th><th>دائن</th><th>الرصيد</th></tr></thead><tbody>${ev.map(x=>{run+=x[2]-x[3];return `<tr><td>${greg(x[0])}</td><td>${esc(x[1])}</td><td>${x[2]?money(x[2]):''}</td><td>${x[3]?money(x[3]):''}</td><td>${money(run)}</td></tr>`}).join('')}</tbody></table><p>الرصيد المستحق على العميل: <b>${money(run)}</b>${run<0?' (مبلغ محتجز لصالح العميل)':''}</p>`,null)}
+const V={dash:V_dash,events:V_events,rec:V_rec,exp:V_exp,cal:V_cal,cust:V_cust,daily:V_daily,reports:V_reports,ledger:V_ledger,audit:V_audit};
+function render(){if(ROLES[role].hide.includes(view))view='dash';nav();$('#main').innerHTML=V[view]();save()}
+function docB(id){const b=S.book.find(x=>x.id===id),p=paidOf(b),ev=S.ev.find(x=>x.id===b.ev),ex=b.e==='L'?S.ex.filter(x=>x.ev===b.ev):[];
+ sheet(shHd(b.e,b.e==='L'?'عقد إيجار قاعة':'فاتورة خدمات تنسيق',b.no)+`<p>الطرف الثاني: <b>${esc(cn(b.cid))}</b> · جوال ${esc(S.cust.find(c=>c.id===b.cid).phone)}<br>المناسبة: ${b.kind} بتاريخ <b>${greg(b.date)}</b> · الحالة: ${STAT[b.st][0]}</p>`+(b.e==='Z'?`<table><thead><tr><th>الخدمة</th><th>السعر</th></tr></thead><tbody>${b.items.map(i=>`<tr><td>${esc(i[0])}</td><td>${money(i[1])}</td></tr>`).join('')}</tbody></table>`:`<p>يؤجر الطرف الأول القاعة للطرف الثاني في التاريخ المذكور بمبلغ ${money(b.base)}، ويلتزم الطرف الثاني بسداد القيمة وفق جدول الدفعات وبالمحافظة على محتويات القاعة.</p>${ex.length?`<table><thead><tr><th>خدمة إضافية</th><th>المبلغ</th></tr></thead><tbody>${ex.map(x=>`<tr><td>${esc(x.svc)}</td><td>${money(x.amt)}</td></tr>`).join('')}</tbody></table>`:''}`)+`<h4>جدول الدفعات</h4>${instT(b)}<p>الإجمالي: <b>${money(b.total)}</b> · المدفوع: ${money(p)} · المتبقي: <b>${money(outOf(b))}</b></p><div class="sg"><span>توقيع الطرف الأول</span><span>توقيع الطرف الثاني</span></div>`,b.e)}
 function act(a,id){
  if(a==='stmt')return stmt(id);const b=S.book.find(x=>x.id===id);
  if((a==='cancelb'||a==='voidr')&&!can('cancel'))return toast('الإلغاء من صلاحية مدير القاعة فقط');
@@ -211,23 +238,29 @@ function act(a,id){
  if(a==='cancelb'){post('ع-'+b.no,'عكس قيد إلغاء '+b.no,[[ENT[b.e].cr,b.total,0],['1100',0,b.total]],b.e);b.st='cancel';log('إلغاء '+b.no+' بقيد عكسي')}
  if(a==='voidr'){const r=S.rec.find(x=>x.id===id);post('ع-'+r.no,'عكس سند قبض '+r.no,[['1100',r.amt,0],[r.pm==='cash'?'1010':'1020',0,r.amt]],r.e);r.st='void';log('إلغاء سند '+r.no+' بقيد عكسي')}
  render()}
-document.addEventListener('click',e=>{const t=e.target.closest('[data-v],[data-f],[data-doc],[data-svc],[data-rc],[data-close],[data-act],[data-cm]');if(!t)return;
+document.addEventListener('click',e=>{const t=e.target.closest('[data-v],[data-f],[data-doc],[data-svc],[data-rc],[data-close],[data-act],[data-cm],[data-ev]');if(!t)return;
  if(t.dataset.close!==undefined){if(e.target===t||t.tagName==='BUTTON')$('#layer').innerHTML='';return}
+ if(t.dataset.ev){cur=t.dataset.ev==='new'?'new':+t.dataset.ev;view='events';return render()}
  if(t.dataset.cm!==undefined){cm=t.dataset.cm==='0'?0:cm+ +t.dataset.cm;return render()}
  if(t.dataset.act)return act(t.dataset.act,+t.dataset.id);
  if(t.dataset.v==='theme'){const r=document.documentElement,d=r.dataset.theme==='dark'||(!r.dataset.theme&&matchMedia('(prefers-color-scheme:dark)').matches);r.dataset.theme=d?'light':'dark';return}
- if(t.dataset.v==='reset'){seed();return render()}
+ if(t.dataset.v==='reset'){seed();cur=1;return render()}
  if(t.dataset.v){view=t.dataset.v;render()}else if(t.dataset.f){flt=t.dataset.f;render()}
  else if(t.dataset.doc)docB(+t.dataset.doc);else if(t.dataset.svc)svcB(+t.dataset.svc);else if(t.dataset.rc)recB(+t.dataset.rc)});
-document.addEventListener('change',e=>{if(e.target.id==='role'){role=e.target.value;render()}});
-document.addEventListener('submit',e=>{e.preventDefault();const id=e.target.id,v=x=>$('#'+x).value;
+document.addEventListener('change',e=>{const i=e.target.id;if(i==='role'){role=e.target.value;render()}
+ const ev=S.ev.find(x=>x.id===cur);if(i==='pct'&&ev){ev.pct=Math.min(100,Math.max(0,+e.target.value||0));render()}if(i==='note'&&ev){ev.note=e.target.value;save()}});
+const parseSvc=s=>s.split(/[,،]/).map(x=>x.split(':')).filter(x=>x[1]&&+x[1]>0).map(x=>[x[0].trim(),+x[1]]);
+document.addEventListener('submit',e=>{e.preventDefault();const id=e.target.id,v=x=>$('#'+x).value,ev=S.ev.find(x=>x.id===cur);
  if(id==='fl'){if(!can('lock'))return;S.lock=v('l-d');log('تحديد تاريخ الإقفال: '+(S.lock||'مفتوحة'));toast(S.lock?'تم إقفال الفترة':'تم فتح الفترة');return render()}
  if(!guard())return;
- if(id==='fb'){const en=v('b-e');let a;if(en==='Z'){a=v('b-a').split(/[,،]/).map(s=>s.split(':')).filter(x=>x[1]&&+x[1]>0).map(x=>[x[0].trim(),+x[1]]);if(!a.length)return toast('اكتب الخدمات بصيغة: اسم:سعر')}else a=+v('b-a');
-  const tot=en==='Z'?a.reduce((x,i)=>x+i[1],0):a,pd=+v('b-r');if(pd>tot)return toast('العربون أكبر من إجمالي العقد');
-  if(en==='L'&&S.book.some(b=>b.e==='L'&&b.st!=='cancel'&&b.date===v('b-d')))return toast('القاعة محجوزة في هذا التاريخ');
-  const b=mkBook(en,v('b-n'),v('b-p'),v('b-i'),v('b-d'),v('b-k'),a,pd,v('b-m'));toast('تم إصدار '+b.no+' · '+STAT[b.st][0]);render()}
- if(id==='fr'){const bid=+v('r-b'),amt=+v('r-a');if(!bid)return;const b=S.book.find(x=>x.id===bid);if(amt>outOf(b))return toast('المبلغ أكبر من المتبقي على العقد');mkRec(bid,amt,v('r-m'));toast('تم إصدار سند القبض');render()}
- if(id==='fe'){addExp(v('e-t'),+v('e-a'),v('e-c'),v('e-m'),v('e-e'));toast('تم تسجيل المصروف');render()}});
+ if(id==='fev'){const svc=parseSvc(v('n-s')),rent=+v('n-r'),pd=+v('n-a');if(v('n-s').trim()&&!svc.length)return toast('اكتب الخدمات بصيغة: اسم:سعر');if(pd>rent)return toast('العربون أكبر من مبلغ عقد الإيجار');
+  if(S.book.some(b=>b.e==='L'&&b.st!=='cancel'&&b.date===v('n-d')))return toast('القاعة محجوزة في هذا التاريخ');
+  const n=mkEvent({name:v('n-n'),phone:v('n-p'),idn:v('n-i'),date:v('n-d'),kind:v('n-k'),rent,svc,paid:pd,pm:v('n-m')});cur=n.id;toast('تم إنشاء الحفل '+n.no);return render()}
+ if(id==='fe1'||id==='fe2'){const c=id==='fe1';addExp(v(c?'a-t':'c-t'),+v(c?'a-a':'c-a'),'5300','cash',c?'L':'Z',ev.id,c?'rent':'coord');toast('تمت إضافة المصروف')}
+ if(id==='fx'){addExtra(ev,v('x-s'),+v('x-a'),+v('x-c')||0);toast('تمت إضافة الخدمة')}
+ if(id==='fz'){const it=parseSvc(v('z-s'));if(!it.length)return toast('اكتب الخدمات بصيغة: اسم:سعر');mkBook('Z',ev,0,it);toast('تم إصدار فاتورة التنسيق')}
+ if(id==='fr2'||id==='fr'){const bid=+v('r-b'),amt=+v('r-a');if(!bid)return;const b=S.book.find(x=>x.id===bid);if(amt>outOf(b))return toast('المبلغ أكبر من المتبقي على المستند');mkRec(bid,amt,v('r-m'));toast('تم إصدار سند القبض')}
+ if(id==='fe'){addExp(v('e-t'),+v('e-a'),v('e-c'),v('e-m'),v('e-e'));toast('تم تسجيل المصروف')}
+ render()});
 load();render();
 </script>
